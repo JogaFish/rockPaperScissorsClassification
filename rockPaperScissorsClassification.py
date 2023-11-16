@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 MAX_COUNTER = 7
 SHOW_COORDS = False
 SHOW_TRAINING = False
+EPOCHS = 600
+MODEL_NAME = "model"
 
 # declare list of data points to be transformed into pd df
 data_list = []
@@ -123,7 +125,7 @@ model.compile(
 model.fit(
     x_train,
     y_train,
-    epochs=1000,
+    epochs=EPOCHS,
     batch_size=128,
     validation_data=(x_test, y_test)
 )
@@ -135,6 +137,8 @@ print("Accuracy for training data " + str(scores_train[1]))
 scores_test = model.evaluate(x_test, y_test, verbose=0)
 print("Accuracy for test data " + str(scores_test[1]))
 
+# save the model
+model.save(MODEL_NAME + ".keras")
 
 
 
