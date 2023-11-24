@@ -42,8 +42,9 @@ for folder in folders:
             results = hands.process(img)
             counter += 1
 
+        world_landmarks = results.multi_hand_world_landmarks
         multi_hand_landmarks = results.multi_hand_landmarks
-
+        handedness = results.multi_handedness
         # draws the landmarks on the image
         if multi_hand_landmarks:
             for hand_landmark in multi_hand_landmarks:
@@ -51,17 +52,21 @@ for folder in folders:
 
         # prints coordinates if needed
         if SHOW_COORDS:
-            if multi_hand_landmarks:
-                print(multi_hand_landmarks)
+            if world_landmarks:
+                print(world_landmarks)
 
         # shows the image on the screen and waits for user input if needed
         if SHOW_TRAINING:
             cv2.imshow("Image", img)
             cv2.waitKey(0)
 
+        # put the handedness in the list
+        if handedness:
+            landmark_list.append(handedness[0].classification[0].index)
+
         # go through landmark obj and append the data to landmark list in order
-        if multi_hand_landmarks:
-            for landmarks in multi_hand_landmarks:
+        if world_landmarks:
+            for landmarks in world_landmarks:
                 landmarks = landmarks.landmark
                 for landmark in landmarks:
                     landmark_list.append(landmark.x)
@@ -75,29 +80,27 @@ for folder in folders:
         data_list.append(landmark_list)
 
 # convert data list into a pandas dataframe
-columns = ['wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x', 'thumb_ip_y',
-           'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y', 'index_dip_x',
-           'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y', 'middle_pip_x', 'middle_pip_y',
+columns = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
+           'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
+           'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y', 'middle_pip_x', 'middle_pip_y',
            'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y', 'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x',
            'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x', 'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y',
            'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y', 'pinky_tip_x', 'pinky_tip_y', 'label']
-numeric_cols = ['wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
+numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
                 'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
                 'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y',
                 'middle_pip_x', 'middle_pip_y', 'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y',
                 'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x', 'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x',
                 'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y',
                 'pinky_tip_x', 'pinky_tip_y']
-categorical_cols = ['label']
 
 df = pd.DataFrame(data_list, columns=columns)
-df = df.drop(df[df['wrist_x'] == 'none'].index)
-print(df.dtypes)
+df = df.drop(df[df['handedness'] == 'none'].index)
 for col in numeric_cols:
     df[col] = pd.to_numeric(df[col])
-for col in categorical_cols:
-    df[col].replace(['none', 'paper', 'rock', 'scissors'], [0, 1, 2, 3], inplace=True)
-    df[col] = pd.to_numeric(df[col])
+
+df['label'].replace(['none', 'paper', 'rock', 'scissors'], [0, 1, 2, 3], inplace=True)
+df['label'] = pd.to_numeric(df['label'])
 print(df.dtypes)
 
 
@@ -107,7 +110,7 @@ x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.33, rando
 
 # create the model
 model = tf.keras.models.Sequential([
-    tf.keras.layers.Input((21 * 2, )),
+    tf.keras.layers.Input(((21 * 2) + 1, )),
     tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Dense(40, activation='relu'),
     tf.keras.layers.Dropout(0.4),
@@ -138,8 +141,4 @@ scores_test = model.evaluate(x_test, y_test, verbose=0)
 print("Accuracy for test data " + str(scores_test[1]))
 
 # save the model
-model.save(MODEL_NAME + ".keras")
-
-
-
-
+model.save(MODEL_NAME)

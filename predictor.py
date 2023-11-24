@@ -12,7 +12,7 @@ hands = mp_hands.Hands(max_num_hands=1)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
-model = load_model("model.keras")
+model = load_model("model")
 
 classNames = ["none", "paper", "rock", "scissors"]
 
@@ -25,9 +25,9 @@ while True:
         break
     results = hands.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
-    if results.multi_hand_landmarks:
-        landmarks = []
-        for hand_landmark in results.multi_hand_landmarks:
+    if results.multi_handedness and results.multi_hand_world_landmarks:
+        landmarks = [results.multi_handedness[0].classification[0].index]
+        for hand_landmark in results.multi_hand_world_landmarks:
             for lm in hand_landmark.landmark:
                 lmx = int(lm.x * x)
                 lmy = int(lm.y * y)
