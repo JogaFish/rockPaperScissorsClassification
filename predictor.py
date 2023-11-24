@@ -31,9 +31,11 @@ while True:
             for lm in hand_landmark.landmark:
                 lmx = int(lm.x * x)
                 lmy = int(lm.y * y)
+                lmz = int(lm.z)
                 landmarks.append(lmx)
                 landmarks.append(lmy)
-            mpDraw.draw_landmarks(img, hand_landmark, mp_hands.HAND_CONNECTIONS)
+                landmarks.append(lmz)
+            mpDraw.draw_landmarks(img, results.multi_hand_landmarks[0], mp_hands.HAND_CONNECTIONS)
         prediction = model.predict([landmarks])
         classID = np.argmax(prediction)
         className = classNames[classID]

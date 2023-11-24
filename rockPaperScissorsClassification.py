@@ -71,7 +71,7 @@ for folder in folders:
                 for landmark in landmarks:
                     landmark_list.append(landmark.x)
                     landmark_list.append(landmark.y)
-                    # landmark_list.append(landmark.z)
+                    landmark_list.append(landmark.z)
 
         # append the label to the end of the list
         landmark_list.append(folder)
@@ -80,19 +80,31 @@ for folder in folders:
         data_list.append(landmark_list)
 
 # convert data list into a pandas dataframe
-columns = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
-           'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
-           'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y', 'middle_pip_x', 'middle_pip_y',
-           'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y', 'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x',
-           'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x', 'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y',
-           'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y', 'pinky_tip_x', 'pinky_tip_y', 'label']
-numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
-                'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
-                'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y',
-                'middle_pip_x', 'middle_pip_y', 'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y',
-                'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x', 'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x',
-                'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y',
-                'pinky_tip_x', 'pinky_tip_y']
+# columns = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
+#            'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
+#            'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y', 'middle_pip_x', 'middle_pip_y',
+#            'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y', 'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x',
+#            'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x', 'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y',
+#            'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y', 'pinky_tip_x', 'pinky_tip_y', 'label']
+# numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
+#                 'thumb_ip_y', 'thumb_tip_x', 'thumb_tip_y', 'index_mcp_x', 'index_mcp_y', 'index_pip_x', 'index_pip_y',
+#                 'index_dip_x', 'index_dip_y', 'index_tip_x', 'index_tip_y', 'middle_mcp_x', 'middle_mcp_y',
+#                 'middle_pip_x', 'middle_pip_y', 'middle_dip_x', 'middle_dip_y', 'middle_tip_x', 'middle_tip_y',
+#                 'ring_mcp_x', 'ring_mcp_y', 'ring_pip_x', 'ring_pip_y', 'ring_dip_x', 'ring_dip_y', 'ring_tip_x',
+#                 'ring_tip_y', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_pip_x', 'pinky_pip_y', 'pinky_dip_x', 'pinky_dip_y',
+#                 'pinky_tip_x', 'pinky_tip_y']
+columns = ['handedness', 'wrist_x', 'wrist_y', 'wrist_z', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_cmc_z', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_mcp_z', 'thumb_ip_x',
+           'thumb_ip_y', 'thumb_ip_z', 'thumb_tip_x', 'thumb_tip_y', 'thumb_tip_z', 'index_mcp_x', 'index_mcp_y', 'index_mcp_z', 'index_pip_x', 'index_pip_y', 'index_pip_z',
+           'index_dip_x', 'index_dip_y', 'index_dip_z', 'index_tip_x', 'index_tip_y', 'index_tip_z', 'middle_mcp_x', 'middle_mcp_y', 'middle_mcp_z', 'middle_pip_x', 'middle_pip_y', 'middle_pip_z',
+           'middle_dip_x', 'middle_dip_y', 'middle_dip_z', 'middle_tip_x', 'middle_tip_y', 'middle_tip_z', 'ring_mcp_x', 'ring_mcp_y', 'ring_mcp_z', 'ring_pip_x',
+           'ring_pip_y', 'ring_pip_z', 'ring_dip_x', 'ring_dip_y', 'ring_dip_z', 'ring_tip_x', 'ring_tip_y', 'ring_tip_z', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_mcp_z',
+           'pinky_pip_x', 'pinky_pip_y', 'pinky_pip_z', 'pinky_dip_x', 'pinky_dip_y', 'pinky_dip_z', 'pinky_tip_x', 'pinky_tip_y', 'pinky_tip_z', 'label']
+numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'wrist_z', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_cmc_z', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_mcp_z', 'thumb_ip_x',
+           'thumb_ip_y', 'thumb_ip_z', 'thumb_tip_x', 'thumb_tip_y', 'thumb_tip_z', 'index_mcp_x', 'index_mcp_y', 'index_mcp_z', 'index_pip_x', 'index_pip_y', 'index_pip_z',
+           'index_dip_x', 'index_dip_y', 'index_dip_z', 'index_tip_x', 'index_tip_y', 'index_tip_z', 'middle_mcp_x', 'middle_mcp_y', 'middle_mcp_z', 'middle_pip_x', 'middle_pip_y', 'middle_pip_z',
+           'middle_dip_x', 'middle_dip_y', 'middle_dip_z', 'middle_tip_x', 'middle_tip_y', 'middle_tip_z', 'ring_mcp_x', 'ring_mcp_y', 'ring_mcp_z', 'ring_pip_x',
+           'ring_pip_y', 'ring_pip_z', 'ring_dip_x', 'ring_dip_y', 'ring_dip_z', 'ring_tip_x', 'ring_tip_y', 'ring_tip_z', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_mcp_z',
+           'pinky_pip_x', 'pinky_pip_y', 'pinky_pip_z', 'pinky_dip_x', 'pinky_dip_y', 'pinky_dip_z', 'pinky_tip_x', 'pinky_tip_y', 'pinky_tip_z']
 
 df = pd.DataFrame(data_list, columns=columns)
 df = df.drop(df[df['handedness'] == 'none'].index)
@@ -110,11 +122,11 @@ x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.33, rando
 
 # create the model
 model = tf.keras.models.Sequential([
-    tf.keras.layers.Input(((21 * 2) + 1, )),
+    tf.keras.layers.Input(((21 * 3) + 1, )),
     tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.Dense(40, activation='relu'),
+    tf.keras.layers.Dense(60, activation='relu'),
     tf.keras.layers.Dropout(0.4),
-    tf.keras.layers.Dense(30, activation='relu'),
+    tf.keras.layers.Dense(50, activation='relu'),
     tf.keras.layers.Dense(4, activation='softmax')
 ])
 
