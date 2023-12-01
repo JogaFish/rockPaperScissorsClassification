@@ -8,11 +8,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # declare constants
+FOLDER_NAME = "rps_data_sample2"
 MAX_COUNTER = 7
 SHOW_COORDS = False
 SHOW_TRAINING = False
 EPOCHS = 600
-MODEL_NAME = "model"
 
 # declare list of data points to be transformed into pd df
 data_list = []
@@ -23,9 +23,9 @@ hands = mp_hands.Hands(max_num_hands=1)
 mpDraw = mp.solutions.drawing_utils
 
 # go through the folders to get every image and read it and show it with cv
-folders = listdir("rps_data_sample")
+folders = listdir(FOLDER_NAME)
 for folder in folders:
-    img_names = listdir("rps_data_sample\\" + folder)
+    img_names = listdir(FOLDER_NAME + "\\" + folder)
 
     # goes through every image in the current folder
     for img_name in img_names:
@@ -33,7 +33,7 @@ for folder in folders:
         landmark_list = []
 
         # reads image using cv and transfers to correct colours
-        img = cv2.imread("rps_data_sample\\" + folder + "\\" + img_name)
+        img = cv2.imread(FOLDER_NAME + "\\" + folder + "\\" + img_name)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # keep running the image through processing to get good coordinates
@@ -73,11 +73,11 @@ for folder in folders:
                     landmark_list.append(landmark.y)
                     landmark_list.append(landmark.z)
 
-        # append the label to the end of the list
-        landmark_list.append(folder)
+            # append the label to the end of the list
+            landmark_list.append(folder)
 
-        # append landmark list to the list of data
-        data_list.append(landmark_list)
+            # append landmark list to the list of data
+            data_list.append(landmark_list)
 
 # convert data list into a pandas dataframe
 # columns = ['handedness', 'wrist_x', 'wrist_y', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_ip_x',
@@ -108,10 +108,14 @@ numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'wrist_z', 'thumb_cmc_x', 't
 
 df = pd.DataFrame(data_list, columns=columns)
 df = df.drop(df[df['handedness'] == 'none'].index)
+df = df.drop(df[df['handedness'] == 'paper'].index)
+
+df['label'].replace(['paper', 'rock', 'scissors'], [0, 1, 2], inplace=True)
+print(df.dtypes)
+print(df)
 for col in numeric_cols:
     df[col] = pd.to_numeric(df[col])
 
-df['label'].replace(['none', 'paper', 'rock', 'scissors'], [0, 1, 2, 3], inplace=True)
 df['label'] = pd.to_numeric(df['label'])
 print(df.dtypes)
 
@@ -153,4 +157,4 @@ scores_test = model.evaluate(x_test, y_test, verbose=0)
 print("Accuracy for test data " + str(scores_test[1]))
 
 # save the model
-model.save(MODEL_NAME)
+model.save(FOLDER_NAME + "_model")
