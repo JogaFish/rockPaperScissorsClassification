@@ -8,7 +8,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # declare constants
-FOLDER_NAME = "rps_data_sample2"
+FOLDER_NAME = "asl_data\\asl_alphabet_train\\asl_alphabet_train\AA"
+LABEL_LIST = ['A', 'B']
 MAX_COUNTER = 7
 SHOW_COORDS = False
 SHOW_TRAINING = False
@@ -100,17 +101,17 @@ columns = ['handedness', 'wrist_x', 'wrist_y', 'wrist_z', 'thumb_cmc_x', 'thumb_
            'ring_pip_y', 'ring_pip_z', 'ring_dip_x', 'ring_dip_y', 'ring_dip_z', 'ring_tip_x', 'ring_tip_y', 'ring_tip_z', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_mcp_z',
            'pinky_pip_x', 'pinky_pip_y', 'pinky_pip_z', 'pinky_dip_x', 'pinky_dip_y', 'pinky_dip_z', 'pinky_tip_x', 'pinky_tip_y', 'pinky_tip_z', 'label']
 numeric_cols = ['handedness', 'wrist_x', 'wrist_y', 'wrist_z', 'thumb_cmc_x', 'thumb_cmc_y', 'thumb_cmc_z', 'thumb_mcp_x', 'thumb_mcp_y', 'thumb_mcp_z', 'thumb_ip_x',
-           'thumb_ip_y', 'thumb_ip_z', 'thumb_tip_x', 'thumb_tip_y', 'thumb_tip_z', 'index_mcp_x', 'index_mcp_y', 'index_mcp_z', 'index_pip_x', 'index_pip_y', 'index_pip_z',
-           'index_dip_x', 'index_dip_y', 'index_dip_z', 'index_tip_x', 'index_tip_y', 'index_tip_z', 'middle_mcp_x', 'middle_mcp_y', 'middle_mcp_z', 'middle_pip_x', 'middle_pip_y', 'middle_pip_z',
-           'middle_dip_x', 'middle_dip_y', 'middle_dip_z', 'middle_tip_x', 'middle_tip_y', 'middle_tip_z', 'ring_mcp_x', 'ring_mcp_y', 'ring_mcp_z', 'ring_pip_x',
-           'ring_pip_y', 'ring_pip_z', 'ring_dip_x', 'ring_dip_y', 'ring_dip_z', 'ring_tip_x', 'ring_tip_y', 'ring_tip_z', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_mcp_z',
-           'pinky_pip_x', 'pinky_pip_y', 'pinky_pip_z', 'pinky_dip_x', 'pinky_dip_y', 'pinky_dip_z', 'pinky_tip_x', 'pinky_tip_y', 'pinky_tip_z']
+                'thumb_ip_y', 'thumb_ip_z', 'thumb_tip_x', 'thumb_tip_y', 'thumb_tip_z', 'index_mcp_x', 'index_mcp_y', 'index_mcp_z', 'index_pip_x', 'index_pip_y', 'index_pip_z',
+                'index_dip_x', 'index_dip_y', 'index_dip_z', 'index_tip_x', 'index_tip_y', 'index_tip_z', 'middle_mcp_x', 'middle_mcp_y', 'middle_mcp_z', 'middle_pip_x', 'middle_pip_y', 'middle_pip_z',
+                'middle_dip_x', 'middle_dip_y', 'middle_dip_z', 'middle_tip_x', 'middle_tip_y', 'middle_tip_z', 'ring_mcp_x', 'ring_mcp_y', 'ring_mcp_z', 'ring_pip_x',
+                'ring_pip_y', 'ring_pip_z', 'ring_dip_x', 'ring_dip_y', 'ring_dip_z', 'ring_tip_x', 'ring_tip_y', 'ring_tip_z', 'pinky_mcp_x', 'pinky_mcp_y', 'pinky_mcp_z',
+                'pinky_pip_x', 'pinky_pip_y', 'pinky_pip_z', 'pinky_dip_x', 'pinky_dip_y', 'pinky_dip_z', 'pinky_tip_x', 'pinky_tip_y', 'pinky_tip_z']
 
 df = pd.DataFrame(data_list, columns=columns)
 df = df.drop(df[df['handedness'] == 'none'].index)
 df = df.drop(df[df['handedness'] == 'paper'].index)
 
-df['label'].replace(['paper', 'rock', 'scissors'], [0, 1, 2], inplace=True)
+df['label'].replace(['A', 'B', 'C'], [0, 1, 2], inplace=True)
 print(df.dtypes)
 print(df)
 for col in numeric_cols:
@@ -131,7 +132,7 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(60, activation='relu'),
     tf.keras.layers.Dropout(0.4),
     tf.keras.layers.Dense(50, activation='relu'),
-    tf.keras.layers.Dense(4, activation='softmax')
+    tf.keras.layers.Dense(3, activation='softmax')
 ])
 
 # compile model

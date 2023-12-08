@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-FOLDER_NAME = "rps_data_sample2"
+FOLDER_NAME = "asl_data\\asl_alphabet_train\\asl_alphabet_train\AA"
 
 cap = cv2.VideoCapture(0)
 
@@ -16,7 +16,7 @@ mpDraw = mp.solutions.drawing_utils
 # Load the gesture recognizer model
 model = load_model(FOLDER_NAME + "_model")
 
-classNames = ["paper", "rock", "scissors"]
+classNames = ["A", "B", "C"]
 
 
 while True:
